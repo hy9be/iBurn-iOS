@@ -11,7 +11,7 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.5.1 # Specify the Xcode version to use
 
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
@@ -27,7 +27,8 @@ jobs:
           command: |
               export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (12" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
               echo $IOS_SIMULATOR_UDID
-              # touch iBurn/GoogleService-Info.plist
+              touch iBurn/GoogleService-Info.plist
+              echo -e "<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>items</key> <array> <dict> <key>assets</key> <array> <dict> <key>kind</key> <string>software-package</string> <key>url</key> <!-- Change URL bellow to the location of your ipa --> <string>https://LINK-TO-YOUR-FILE-SHARE</string> </dict> </array> <key>metadata</key> <dict> <key>bundle-identifier</key> <!-- change bundle identifer to the one you are using in your app --> <string>com.mallibone.sample</string> <key>bundle-version</key> <!-- change version bellow to the version you are providing --> <string>1.0</string> <key>kind</key> <string>software</string> <key>title</key> <!-- change title to match your app name --> <string>Mobile Friendly</string> </dict> </dict> </array> </dict> </plist>" > iBurn/GoogleService-Info.plist
               echo -e "#define MAPBOX_ACCESS_TOKEN test\n#define CRASHLYTICS_API_TOKEN test\n" > ./iBurn/InfoPlistSecrets.h
               echo -e "NSString * const kBRCHockeyBetaIdentifier = @\"\";\nNSString * const kBRCHockeyLiveIdentifier = @\"\";\nNSString * const kBRCEmbargoPasscodeSHA256Hash = @\"\";\nNSString * const kBRCUpdatesURLString = @\"\";\nNSString * const kBRCMapBoxStyleURL = @\"https://example.com\";\nNSString * const kBRCMapBoxAccessToken = @\"\";\n" > ./iBurn/BRCSecrets.m
       - run: pod install # Install CocoaPods dependencies
