@@ -26,7 +26,7 @@ before_script:
   - bundle exec pod install
 script:
   - set -o pipefail
-  - xcodebuild test -workspace iBurn.xcworkspace -scheme iBurn -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" build | xcpretty -c
+  - xcodebuild -workspace iBurn.xcworkspace -scheme iBurn -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" build | xcpretty -c
 
 # after_success:
 #   - set -o pipefail
