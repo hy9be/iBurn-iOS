@@ -9,7 +9,8 @@ DerivedData
 *.orig
 /iBurn/BRCSecrets.m
 /iBurn/InfoPlistSecrets.h
-iBurn/GoogleService-Info.plist
+# iBurn/GoogleService-Info.plist
+
 
 /Pods/
 
