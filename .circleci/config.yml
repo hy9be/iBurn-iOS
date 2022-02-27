@@ -25,17 +25,19 @@ jobs:
       - run:
           name: "Pre-build scripts"
           command: |
-              export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (12" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
-              echo $IOS_SIMULATOR_UDID
-              # touch iBurn/GoogleService-Info.plist
-              # echo -e "<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>items</key> <array> <dict> <key>assets</key> <array> <dict> <key>kind</key> <string>software-package</string> <key>url</key> <!-- Change URL bellow to the location of your ipa --> <string>https://LINK-TO-YOUR-FILE-SHARE</string> </dict> </array> <key>metadata</key> <dict> <key>bundle-identifier</key> <!-- change bundle identifer to the one you are using in your app --> <string>com.mallibone.sample</string> <key>bundle-version</key> <!-- change version bellow to the version you are providing --> <string>1.0</string> <key>kind</key> <string>software</string> <key>title</key> <!-- change title to match your app name --> <string>Mobile Friendly</string> </dict> </dict> </array> </dict> </plist>" > iBurn/GoogleService-Info.plist
+              touch iBurn/GoogleService-Info.plist
+              echo -e "<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'><plist version='1.0'><dict><key>AD_UNIT_ID_FOR_BANNER_TEST</key><string>ca-app-pub-3940256099942544/2934735716</string><key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key><string>ca-app-pub-3940256099942544/4411468910</string><key>CLIENT_ID</key><string>test-do-not-use.apps.googleusercontent.com</string><key>REVERSED_CLIENT_ID</key><string>com.googleusercontent.apps.test-do-not-use</string><key>API_KEY</key><string>000000000000000000000000000000000000000</string><key>GCM_SENDER_ID</key><string>999999999999</string><key>PLIST_VERSION</key><string>1</string><key>BUNDLE_ID</key><string>com.google.example.BannerExample</string><key>IS_ADS_ENABLED</key><true/><key>IS_ANALYTICS_ENABLED</key><false/><key>IS_APPINVITE_ENABLED</key><false/><key>IS_GCM_ENABLED</key><true/><key>IS_SIGNIN_ENABLED</key><true/><key>GOOGLE_APP_ID</key><string>1:999999999999:ios:0000000000000000</string><key>DATABASE_URL</key><string>https://test-do-not-use.firebaseio.com</string></dict></plist>" > iBurn/GoogleService-Info.plist
               echo -e "#define MAPBOX_ACCESS_TOKEN test\n#define CRASHLYTICS_API_TOKEN test\n" > ./iBurn/InfoPlistSecrets.h
               echo -e "NSString * const kBRCHockeyBetaIdentifier = @\"\";\nNSString * const kBRCHockeyLiveIdentifier = @\"\";\nNSString * const kBRCEmbargoPasscodeSHA256Hash = @\"\";\nNSString * const kBRCUpdatesURLString = @\"\";\nNSString * const kBRCMapBoxStyleURL = @\"https://example.com\";\nNSString * const kBRCMapBoxAccessToken = @\"\";\n" > ./iBurn/BRCSecrets.m
-      - run: pod install # Install CocoaPods dependencies
+              bundle install
+              bundle exec pod repo update --silent
+              bundle exec pod install
       - run: 
           name: "Build"
           command: |
             set -o pipefail
+            export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (12" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
+            echo $IOS_SIMULATOR_UDID
             xcodebuild -workspace iBurn.xcworkspace -scheme iBurn -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" build | xcpretty -c
 
       # Collect XML test results data to show in the UI, and save the same XML
