@@ -36,7 +36,7 @@ jobs:
           name: "Build"
           command: |
             set -o pipefail
-            xcodebuild -workspace iBurn.xcworkspace -scheme iBurn -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 8,OS=12.4" build | xcpretty -c
+            xcodebuild -workspace iBurn.xcworkspace -scheme iBurn -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11,OS=13.7" build | xcpretty -c
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
